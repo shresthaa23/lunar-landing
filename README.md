@@ -15,7 +15,6 @@ uv run src/lunar/project3.py
 |---|---|
 | Python | 3.12.3 |
 | gymnasium | 1.4.0 |
-
 | numpy | 2.5.4 |
 | matplotlib | 3.11.2 |
 | keras | 3.15.1 | 
