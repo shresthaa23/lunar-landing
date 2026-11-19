@@ -20,7 +20,6 @@ uv run src/lunar/project3.py
 | matplotlib | 3.11.2 |
 | keras | 3.15.1 | 
 | tensorflow | 2.21.0 |
-
 | Hardware | Intel Core i7-1360P laptop CPU (16 threads), 7.6 GB RAM, Ubuntu on WSL2, no GPU |
 | Runtime | about 6-7 min end-to-end |
 
