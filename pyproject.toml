@@ -7,7 +7,12 @@ authors = [
     { name = "Alex Shrestha", email = "ashrest6@terpmail.umd.edu" }
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "gymnasium[box2d]>=1.4.0",
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.5",
+    "torch>=2.15.0",
+]
 
 [project.scripts]
 lunar = "lunar:main"

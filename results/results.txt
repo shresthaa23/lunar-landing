@@ -1,0 +1,53 @@
+Evaluation: frozen deterministic actor (no exploration noise, no learning)
+Training seed: 42 | Eval seeds: [101, 202, 303]
+Training episodes: 2000 | Env steps: 1481586 | Gradient updates: 59223
+Training time: 583 s
+
+Seed 101: mean  -41.59 | returns: -44.2, -61.6, -55.2, -49.1, -36.6, -30.2, -67.1, -47.5, -35.4, 11.0
+Seed 202: mean  -49.25 | returns: -60.4, -61.0, -71.2, -29.6, -75.2, 10.0, -74.4, -62.9, -24.3, -43.6
+Seed 303: mean  -48.75 | returns: -26.1, -37.0, -36.9, -79.7, -32.6, -57.7, -71.3, -44.2, -47.1, -54.8
+
+Overall mean (30 episodes): -46.53
+Exceeds 200: No
+
+Training progress (every 50 episodes):
+Episode   50 | noise: 0.191 | env steps:    8913 | mean return (last 50): -250.07 |     0 s
+Episode  100 | noise: 0.177 | env steps:   23982 | mean return (last 50): -265.44 |     3 s
+Episode  150 | noise: 0.166 | env steps:   36850 | mean return (last 50): -275.76 |     6 s
+Episode  200 | noise: 0.136 | env steps:   77485 | mean return (last 50): -137.30 |    14 s
+Episode  250 | noise: 0.107 | env steps:  125409 | mean return (last 50):  -44.32 |    25 s
+Episode  300 | noise: 0.089 | env steps:  161887 | mean return (last 50):  -76.23 |    32 s
+Episode  350 | noise: 0.070 | env steps:  210948 | mean return (last 50):  -40.27 |    45 s
+Episode  400 | noise: 0.058 | env steps:  247762 | mean return (last 50):  -60.83 |    57 s
+Episode  450 | noise: 0.049 | env steps:  281035 | mean return (last 50):  -78.45 |    66 s
+Episode  500 | noise: 0.039 | env steps:  327071 | mean return (last 50):  -20.90 |    79 s
+Episode  550 | noise: 0.031 | env steps:  374723 | mean return (last 50):  -34.61 |    93 s
+Episode  600 | noise: 0.025 | env steps:  419624 | mean return (last 50):  -21.32 |   109 s
+Episode  650 | noise: 0.020 | env steps:  459978 | mean return (last 50):  -45.45 |   122 s
+Episode  700 | noise: 0.016 | env steps:  506165 | mean return (last 50):  -62.28 |   137 s
+Episode  750 | noise: 0.013 | env steps:  550162 | mean return (last 50):  -39.25 |   152 s
+Episode  800 | noise: 0.011 | env steps:  589325 | mean return (last 50):  -39.58 |   165 s
+Episode  850 | noise: 0.010 | env steps:  635818 | mean return (last 50):  -23.48 |   182 s
+Episode  900 | noise: 0.010 | env steps:  680077 | mean return (last 50):  -37.23 |   197 s
+Episode  950 | noise: 0.010 | env steps:  730077 | mean return (last 50):  -39.17 |   218 s
+Episode 1000 | noise: 0.010 | env steps:  770227 | mean return (last 50):  -67.41 |   234 s
+Episode 1050 | noise: 0.010 | env steps:  814769 | mean return (last 50):  -46.21 |   254 s
+Episode 1100 | noise: 0.010 | env steps:  855451 | mean return (last 50):  -42.46 |   273 s
+Episode 1150 | noise: 0.010 | env steps:  903104 | mean return (last 50):  -36.61 |   296 s
+Episode 1200 | noise: 0.010 | env steps:  939313 | mean return (last 50):  -67.23 |   314 s
+Episode 1250 | noise: 0.010 | env steps:  986760 | mean return (last 50):  -26.34 |   341 s
+Episode 1300 | noise: 0.010 | env steps: 1021825 | mean return (last 50):  -68.86 |   361 s
+Episode 1350 | noise: 0.010 | env steps: 1066796 | mean return (last 50):  -29.29 |   383 s
+Episode 1400 | noise: 0.010 | env steps: 1085470 | mean return (last 50): -165.57 |   393 s
+Episode 1450 | noise: 0.010 | env steps: 1127557 | mean return (last 50):  -52.23 |   412 s
+Episode 1500 | noise: 0.010 | env steps: 1165377 | mean return (last 50):  -70.29 |   430 s
+Episode 1550 | noise: 0.010 | env steps: 1206285 | mean return (last 50):  -89.73 |   447 s
+Episode 1600 | noise: 0.010 | env steps: 1248168 | mean return (last 50):  -42.85 |   465 s
+Episode 1650 | noise: 0.010 | env steps: 1289392 | mean return (last 50):  -49.35 |   485 s
+Episode 1700 | noise: 0.010 | env steps: 1337113 | mean return (last 50):  -29.82 |   507 s
+Episode 1750 | noise: 0.010 | env steps: 1381853 | mean return (last 50):  -30.03 |   531 s
+Episode 1800 | noise: 0.010 | env steps: 1406477 | mean return (last 50):  -23.65 |   545 s
+Episode 1850 | noise: 0.010 | env steps: 1430700 | mean return (last 50):  -27.19 |   558 s
+Episode 1900 | noise: 0.010 | env steps: 1464823 | mean return (last 50):  -21.66 |   575 s
+Episode 1950 | noise: 0.010 | env steps: 1475850 | mean return (last 50):  -37.45 |   581 s
+Episode 2000 | noise: 0.010 | env steps: 1481586 | mean return (last 50):  -39.75 |   583 s

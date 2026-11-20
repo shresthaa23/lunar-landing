@@ -1,5 +1,7 @@
 # lunar-landing-reinforce-learning
-THIS IS OLD README - NOT VALID INFO SO READING BELOW WON'T HELP
+Training an artificial agent to land Gymnasium's `LunarLander-v3` (`continuous=True`) using Deep Deterministic Policy Gradient (DDPG). The landing machine has 8 continuous values (position, velocity, angle, angular velocity, leg contacts) and has 2 continuous engines [-1, 1] (main and side engines). The goal is to land softly between the flags of the planet. 
+
+The code trains an actor and critic network for 2000 episodes with a replay buffer, target network for softer updates, and decaying Gaussian noise. Once training is completed, the frozen actor is evaluated with 0 noise in 3 fresh environments with 10 episodes each. The results are printed in the `results/` folder and comes with a graph of the training process and evaluation returns. The actor weights are saved to `results/actor.pt`.
 
 ## To Run
 
@@ -14,75 +16,61 @@ uv run src/lunar/project3.py
 | | |
 |---|---|
 | Python | 3.12.3 |
-| gymnasium | 1.4.0 |
-| numpy | 2.5.4 |
+| gymnasium | 1.4.0 (with box2d 2.3.10) |
+| torch | 2.15.0 (run on CPU) |
+| numpy | 2.5.5 |
 | matplotlib | 3.11.2 |
-| keras | 3.15.1 | 
-| tensorflow | 2.21.0 |
 | Hardware | Intel Core i7-1360P laptop CPU (16 threads), 7.6 GB RAM, Ubuntu on WSL2, no GPU |
-| Runtime | about 6-7 min end-to-end |
+| Runtime | about 8-10 min of compute end-to-end |
 
+Other downloaded items in the requirements are installed automatically along with the packages above.
 
 ## Given Hyperparameters
 
-| replay_capacity | gamma | epsilon | epsilon_min | epsilon_decay | num_episodes | evaluation_episodes | learning_rate | batch_size | training_frequency | target_update_frequency |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 20000 | 0.95 | 1.0 | 0.01 | 0.995 | 1000 | 100 | 0.001 | 32 | 4 | 200 |
+All starting settings from the project description were used unchanged.
 
-Epsilon is decayed once after each completed episode.
+| warmup_steps | gamma | tau | actor_lr | critic_lr | buffer_size | batch_size | noise_std | noise_decay | min_noise | update_every | num_episodes |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1000 | 0.99 | 0.01 | 0.001 | 0.002 | 1,000,000 | 64 | 0.2 | 0.999995 | 0.01 | 25 | 2000 |
 
 ## Random Seeds
 
-- Training environment seed - 123
-- Evaluation environment seed - 420
+- Training seed - 42
+- Evaluation seeds - 101, 202, 303 (3 fresh environments)
 
 ## High Level Architecture
 
-Built with TensorFlow + Keras:
+Built with PyTorch:
 
-- **Input** - 4 values - cart position, cart velocity, pole angle, pole angular velocity
-- **Hidden** - 2 dense layers, 24 neurons each, ReLU activation
-- **Output** - 2 values (q-value per action: left, right), linear activation 
-- **Loss + Optimizer** - MSE, Adam optimizer with learning rate 0.001
-
-## Reward Handling
-
-In the training process, the reward on true terminal ending was replaced with -10 instead
-of the original result. This was used in training, but native results stored still kept original
-values. Truncation rewards were not changed.
+- **Actor** - 8 inputs → 128 ReLU → 128 ReLU → 2 outputs with tanh
+- **Critic** - 8 state + 2 action values concatenated (10 inputs) → 128 ReLU → 128 ReLU → 1 linear output (Q-value)
+- **Target networks** - exact copies of the actor and critic at the start, then soft updated - not directly with gradient descent.
+- **Optimizers** - Adam optimizer for both actor and critic, learning rates .001 and .002 respectively
 
 ## Evaluation Results
 
-Frozen online model on 100 fresh episodes:
+Frozen actor on 3 seeds × 10 episodes:
 
-| Mean return | Min | Max | Reached 475? |
-|---|---|---|---|
-| 233.64 | 208 | 299 | No |
+| Seed | Mean return |
+|---|---|
+| 101 | -41.59 |
+| 202 | -49.25 |
+| 303 | -48.75 |
+| **Overall (30 episodes)** | **-46.53** |
+
+Exceeds 200 benchmark? **No.** 
 
 ## Results / Graph Explanation
-**Training (top panel):** The returns are relatively low for the first ~200 episodes of training. 
-The epsilon remains high and the agent is exploring the cartpole at first. Between episodes 200-300, 
-the reward climbs quickly to about 200-330 and then levels off around 120-160. It does spike again
-at around 900 with some episodes hitting 500, before the average drops back down. 
+**Training (top panel):** Returns are very low at the start, around -250 and can spike down to -800 from episodes 0-180. This is from the random warmup and the start of learning when random noise and effects are expected. From episode 180 to 300, the average climbs up quickly to -50 and the agent stops crashing hard. From then on, the average stays between roughly -20 to -90. Some of the middle-stage episodes get close to 1000 full steps, suggesting that the agent is learning to hover safely and burn fuel, avoiding the penalty but never getting the landing bonus.
 
-**Evaluation (bottom panel):** The frozen policy is mostly consistent with all episodes scoring
-in the 200s, with an average of 233.64. This is much lower than the 475 threshold with the given
-hyperparameters.
+**Evaluation (bottom panel):** The frozen policy is consistent across all 3 environments, with only 2 of the 30 being positive and the rest hovering around -20 to -80. This avoids crashing reliably but doesn't finish the landings successfully. This returns an overall mean of -46.53 which is well below the benchmark 200. 
 
 **Why low score**
-- **γ = .95.** This has a short planning horizon reward of only about 20 steps away. In  
-  CartPole, while knowing very far ahead may be useless, knowing a bit farther is crucial as
-  a slow drift or slowly growing angle can tilt the pole and cause failure later than the action 
-  expected it to. This rate balances the short-term well but may not correct long-term drift.
-- **DQN.** Deep Q learning is unstable and this online network changes very often at 4 steps, 
-  and the TD is coming from itself still learning. There are a lot of dips and rises which is 
-  seen in the graph. Also the policy evaluated is the final policy at 1000, not necessarily the 
-  best one seen at all. 
-- **Limited training.** 1000 episodes isn't a ton in the grand scheme of things. Also the 24-24
-  network and hyperparameters could potentially be tuned to be more optimal. 
+- **Few updates.** One update every 25 environment steps may not be enough updates for over a million environment steps. The critic and actor get little training compared to experience. 
+- **Hovering local.** Hovering avoids the -100 crash penalty, so the critic learns that that is a safe position, and doesn't expand. The noise is tiny by the time the policy tries landing, so the agent doesn't discover the reward.
+- **One run, final policy.** The policy evaluated is just the last episode, not necessarily the best one seen.
 
 **Ways to improve**
-- Larger discount like (γ = 0.99) could lengthen the horizon
-- Lower learning rate (.0005) could minimize instability
-- Implementing double-DQN to reduce overestimation of Q-values
-- Running more episodes and different seeds to improve on different environments
+- Update more often instead of every 25 steps to best use experience
+- Slower noise decay or a higher minimum noise
+- Training for more episodes and with many training seeds to check robustness
